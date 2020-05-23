@@ -1,0 +1,78 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.3"
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles 'consumer-rules.pro'
+    }
+
+    flavorDimensions "mode"
+
+    productFlavors {
+        devMode {
+            dimension "mode"
+            buildConfigField("Boolean", "DEBUG_MODE", "true")
+            buildConfigField("String", "DOMAIN", "")
+        }
+
+        productionMode {
+            dimension "mode"
+            buildConfigField("Boolean", "DEBUG_MODE", "false")
+            buildConfigField("String", "DOMAIN", "")
+        }
+
+        buildTypes {
+            debug {
+                debuggable true
+                minifyEnabled false
+                useProguard = false
+                shrinkResources = false
+                proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            }
+            release {
+                minifyEnabled false
+                proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            }
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "androidx.appcompat:appcompat:$androidSupportLibVersion"
+    api rootProject.ext.constraintlayout
+    api rootProject.ext.androidX
+    api rootProject.ext.materialComponents
+
+    api rootProject.ext.viewModelScope
+    api rootProject.ext.lifecycleScope
+
+    api rootProject.ext.coroutines
+    api rootProject.ext.coroutinesAndroid
+
+    api rootProject.ext.koin
+
+    api rootProject.ext.kotlinSerialization
+
+    api rootProject.ext.retrofit
+    implementation rootProject.ext.retrofitGsonConverter
+    implementation rootProject.ext.retrofitLoggingInterceptors
+    implementation rootProject.ext.retrofitCoroutinesConverter
+
+    api rootProject.ext.junit
+    api rootProject.ext.coroutinesTest
+    api rootProject.ext.mockito
+
+}

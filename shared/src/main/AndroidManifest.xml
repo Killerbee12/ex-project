@@ -1,0 +1,10 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.shared">
+
+    <application>
+        <provider
+            android:name=".ShareModuleInitProvider"
+            android:authorities="${applicationId}.datamoduleinitprovider"
+            android:exported="false" />
+    </application>
+</manifest>

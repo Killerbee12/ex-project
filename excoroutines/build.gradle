@@ -1,0 +1,61 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlinx-serialization'
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.3"
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles 'consumer-rules.pro'
+    }
+
+    flavorDimensions "mode"
+
+    productFlavors {
+        devMode {
+            dimension "mode"
+            buildConfigField("Boolean", "DEBUG_MODE", "true")
+        }
+
+        productionMode {
+            dimension "mode"
+            buildConfigField("Boolean", "DEBUG_MODE", "false")
+        }
+    }
+
+    buildTypes {
+        debug {
+            debuggable true
+            minifyEnabled false
+            useProguard = false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation project(':shared')
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation rootProject.ext.coroutines
+    implementation rootProject.ext.retrofitGsonConverter
+    implementation rootProject.ext.retrofitCoroutinesConverter
+
+    testImplementation rootProject.ext.androidTestRunner
+    testImplementation rootProject.ext.instantTaskExecutorRule
+
+    androidTestImplementation rootProject.ext.instrumentedTest
+    androidTestImplementation rootProject.ext.espresso
+}

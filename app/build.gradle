@@ -1,0 +1,83 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+android {
+    compileSdkVersion  rootProject.ext.compileSdkVersion
+
+    defaultConfig {
+        applicationId "com.example.project"
+        minSdkVersion 21
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    flavorDimensions "mode"
+
+    productFlavors {
+        devMode {
+            dimension "mode"
+            applicationIdSuffix ".dev"
+            buildConfigField("Boolean", "DEBUG_MODE", "true")
+        }
+
+        productionMode {
+            dimension "mode"
+            buildConfigField("Boolean", "DEBUG_MODE", "false")
+        }
+    }
+
+    buildTypes {
+        debug {
+            debuggable true
+            minifyEnabled false
+            useProguard = false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+
+// To inline the bytecode built with JVM target 1.8 into
+// bytecode that is being built with JVM target 1.6. (e.g. navArgs)
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
+
+}
+
+dependencies {
+    ':excoroutines'
+    implementation project(':excoroutines')
+    implementation project(':shared')
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    testImplementation rootProject.ext.assertj
+    testImplementation rootProject.ext.androidTestRunner
+    testImplementation rootProject.ext.instantTaskExecutorRule
+
+    androidTestImplementation rootProject.ext.instrumentedTest
+    androidTestImplementation rootProject.ext.espresso
+}
+
+apply plugin: 'com.google.gms.google-services'
+
